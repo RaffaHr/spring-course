@@ -4,12 +4,10 @@ import com.raffadev.springcourse.dto.UserDTO;
 import com.raffadev.springcourse.mapper.UserMapper;
 import com.raffadev.springcourse.model.UserModel;
 import com.raffadev.springcourse.repository.UserRepository;
-import org.hibernate.mapping.Any;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,7 +29,16 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Boolean save(UserDTO user, Long id) {
+    public Boolean save(UserDTO user) {
+        try {
+            userRepository.save(this.userMapper.toEntity(user));
+            return true;
+        }catch (DataIntegrityViolationException e) {
+            return false;
+        }
+    }
+
+    public Boolean update(UserDTO user, Long id) {
         try {
             user.setId(id);
             userRepository.save(this.userMapper.toEntity(user));
