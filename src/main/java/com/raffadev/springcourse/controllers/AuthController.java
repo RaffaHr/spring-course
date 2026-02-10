@@ -4,6 +4,7 @@ import com.raffadev.springcourse.model.UserEntity;
 import com.raffadev.springcourse.security.JWTUtil;
 import com.raffadev.springcourse.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +28,13 @@ public class AuthController {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
-
+    @Operation(summary = "Authentication", tags = "Authentication", description = "Faz o registro de um usuário no banco de dados")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Map<String, String> body) {
         UserEntity user = userService.registerUser(body.get("username"), body.get("password"), body.get("email"));
         return ResponseEntity.ok(user);
     }
-
+    @Operation(summary = "Authentication", tags = "Authentication", description = "Faz o login de um usuário, já validando a senha criptografada e retornando o token JWT")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         Optional<UserEntity> user = userService.findByUsername(body.get("username"));
