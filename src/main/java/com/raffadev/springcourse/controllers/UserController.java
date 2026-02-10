@@ -1,6 +1,6 @@
 package com.raffadev.springcourse.controllers;
 
-import com.raffadev.springcourse.model.User;
+import com.raffadev.springcourse.model.UserEntity;
 import com.raffadev.springcourse.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -24,14 +24,14 @@ public class UserController {
 
     @Operation(summary = "Users", tags = "Users", description = "Lista todos os usuarios do banco")
     @GetMapping
-    public List<User> findAll() {
+    public List<UserEntity> findAll() {
         return userService.listUsers();
     }
 
     @Operation(summary = "Users", tags = "Users", description = "Retorna todos os dados de um usuário pelo ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        User user = userService.findById(id);
+        UserEntity user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
 
