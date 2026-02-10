@@ -1,6 +1,6 @@
 package com.raffadev.springcourse.controllers;
 
-import com.raffadev.springcourse.model.UserModel;
+import com.raffadev.springcourse.model.User;
 import com.raffadev.springcourse.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -11,8 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import com.raffadev.springcourse.dto.UserDTO;
 import jakarta.validation.Valid;
-
-import javax.management.Descriptor;
 
 @RestController
 @RequestMapping("/api")
@@ -26,16 +24,15 @@ public class UserController {
 
     @Operation(summary = "Users", tags = "Users", description = "Lista todos os usuarios do banco")
     @GetMapping
-    public List<UserModel> findAll() {
+    public List<User> findAll() {
         return userService.listUsers();
     }
 
     @Operation(summary = "Users", tags = "Users", description = "Retorna todos os dados de um usuário pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<UserModel> getUser(@PathVariable Long id) {
-        return userService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
 
     @Operation(summary = "Users", tags = "Users", description = "Atualiza os dados de um usuário")

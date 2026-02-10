@@ -2,13 +2,13 @@ package com.raffadev.springcourse.services;
 
 import com.raffadev.springcourse.dto.UserDTO;
 import com.raffadev.springcourse.mapper.UserMapper;
-import com.raffadev.springcourse.model.UserModel;
+import com.raffadev.springcourse.model.User;
 import com.raffadev.springcourse.repository.UserRepository;
+import com.raffadev.springcourse.exceptions.ResourceNotFound;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -21,12 +21,13 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public List<UserModel> listUsers() {
+    public List<User> listUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<UserModel> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("User with id " + id + " not found"));
     }
 
     public Boolean save(UserDTO user) {
@@ -50,6 +51,9 @@ public class UserService {
 
     public Boolean delete(Long id) {
         try {
+            if (!userRepository.existsById(id)) {
+                throw new ResourceNotFound("User  with id " + id + " not found");
+            }
             userRepository.deleteById(id);
             return true;
         } catch (DataIntegrityViolationException e) {
